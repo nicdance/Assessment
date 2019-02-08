@@ -67,8 +67,15 @@ void PlayGame() {
 			std::cout << i + 1 << "\t";
 			for (int j = 0; j < gridHeight; j++)
 			{
-				//std::cout << gameGrid[gridWidth][gridHeight] << "\t|\t";
-				std::cout << "|\t" << gameGrid[i][j] <<"\t" ;
+				if (gameGrid[i][j] == 11) {
+					std::cout << "|\t" << "X" << "\t";
+				}
+				else if (gameGrid[i][j] == 22) {
+					std::cout << "|\t" << "O" << "\t";
+				} else
+				{
+					std::cout << "|\t" << "" << "\t";
+				}
 			}
 			std::cout << "|\t" << std::endl << "\t-\t-\t-\t-\t-\t-\t-\t" << std::endl;
 		}
@@ -99,6 +106,9 @@ void PlayGame() {
 						gameGrid[rowChoice][colChoice] = 22;
 					}
 					pickOption = false;
+				}
+				else {
+					std::cout << "Square already taken. Try again. " << std::endl;
 				}
 			}
 			else {
