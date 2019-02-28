@@ -204,7 +204,7 @@ void PopulateGrid(char gameGrid[gridSize][gridSize]) {
 char  CheckWinner(char gameGrid[gridSize][gridSize]) {
 	// Check Horizontal
 	int win = 1;
-	for (int i = 1; i < gridSize; i++)
+	for (int i = 0; i < gridSize; i++)
 	{
 		for (int j = 1; j < gridSize; j++)
 		{
