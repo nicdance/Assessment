@@ -1,3 +1,9 @@
+/* 
+/	@Author Nicole Dance
+/   Assessment 1 - Tic Tac Toe
+*/
+
+
 #include <iostream>
 
 // Constant Values
@@ -86,52 +92,73 @@ void PlayGame() {
 	// Loops until no more moves
 	for (int i = 1; i < 10; i++)
 	{
-
+		int errorCode = 0;
 		std::cout << std::endl << "Player " << playersTurn << " Turn.";
 		DrawGrid(gameGrid);
 
 		bool pickOption = true;
 		while (pickOption)
 		{
-			std::cout << "Please enter Row (1-3) -> ";
+			if (errorCode == 1) {
+				std::cout << std::endl << "*** Error: Please ensure you enter a numeral value ***" << std::endl << std::endl;
+			}
+			else if (errorCode == 2) {
+				std::cout << std::endl << "*** Error: Please ensure you select a valid number from the list ***" << std::endl << std::endl;
+			}
+			else if (errorCode == 3) {
+				std::cout << std::endl << "*** Error: Square already Taken. Try again ***" << std::endl << std::endl;
+			}
+			errorCode = 0;
+			std::cout << "Please enter Row (1-" << gridSize << " ) -> ";
 			int rowChoice = 0;
-			std::cin >> rowChoice;
-
-			std::cout << "Please enter Column (1-3) -> ";
 			int colChoice = 0;
-			std::cin >> colChoice;
+			std::cin >> rowChoice;
 
 			if (std::cin.fail()) {
 				std::cin.clear();
-				std::cin.ignore(1);
-			}
-			else if ((colChoice >= 1 && colChoice <= gridSize) && (rowChoice >= 1 && rowChoice <= gridSize))
-			{
-
-				rowChoice--;
-				colChoice--;
-
-				if (gameGrid[rowChoice][colChoice] == ' ') {
-					if (playersTurn == 1)
-					{
-						gameGrid[rowChoice][colChoice] = 'O';
-					}
-					else {
-						gameGrid[rowChoice][colChoice] = 'X';
-					}
-					pickOption = false;
-				}
-				else {
-					std::cout << "Square already taken. Try again. " << std::endl;
-				}
+				std::cin.ignore();
+				errorCode = 1;
 			}
 			else {
-				std::cout << "Invalid grid selection, please try again." << std::endl;
+				std::cout << "Please enter Column (1-" << gridSize << ") -> ";
+				std::cin >> colChoice;
+
+				if (std::cin.fail()) {
+					std::cin.clear();
+					std::cin.ignore();
+					errorCode = 1;
+				}
+			}
+			
+			if (errorCode != 1){
+				if ((colChoice >= 1 && colChoice <= gridSize) && (rowChoice >= 1 && rowChoice <= gridSize))
+				{
+
+					rowChoice--;
+					colChoice--;
+
+					if (gameGrid[rowChoice][colChoice] == ' ') {
+						if (playersTurn == 1)
+						{
+							gameGrid[rowChoice][colChoice] = 'O';
+						}
+						else {
+							gameGrid[rowChoice][colChoice] = 'X';
+						}
+						pickOption = false;
+					}
+					else {
+						errorCode = 3;
+					}
+				}
+				else {
+					errorCode = 2;
+				}
 			}
 
 		}
 		winner = CheckWinner(gameGrid);
-		std::cout << "Check Winner result is " << winner << std::endl;
+		//std::cout << "Check Winner result is " << winner << std::endl;
 		if (winner != ' ') {
 			i = 10;
 		}
