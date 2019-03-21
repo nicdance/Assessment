@@ -1,7 +1,17 @@
 #include "TeamMember.h"
+#include <string>
 
 TeamMember::TeamMember()
 {
+}
+
+TeamMember::TeamMember(std::string name, std::string attack, int min, int max, int health)
+{
+	playerName = name;
+	attackName = attack;
+	minAttack = min;
+	maxAttack = max;
+	playerHealth = health;
 }
 
 
@@ -10,11 +20,11 @@ TeamMember::~TeamMember()
 }
 
 void  TeamMember::TakeDamage(int damageTaken) {
-	health -= damageTaken;
+	playerHealth -= damageTaken;
 }
 
 std::string TeamMember::GetName() {
-	return name;
+	return playerName;
 }
 
 std::string TeamMember::GetAttackName() {
@@ -29,9 +39,29 @@ int TeamMember::GetMaxAttack() {
 	return maxAttack;
 }
 
+int TeamMember::GetHealth() {
+	return playerHealth;
+}
+
+void TeamMember::SetName(std::string name) {
+	playerName = name;
+}
+void TeamMember::SetAttackName(std::string attack) {
+	attackName = attack;
+}
+void TeamMember::SetMinAttack(int min) {
+	minAttack = min;
+
+}
+void TeamMember::SetMaxAttack(int max) {
+	maxAttack = max;
+}
+void TeamMember::SetHealth(int health) {
+	playerHealth = health;
+}
 
 bool TeamMember::IsMemberDead() {
-	if (health<=0) {
+	if (playerHealth<=0) {
 		return true;
 	}
 	else {

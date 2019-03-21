@@ -7,14 +7,15 @@ class TeamMember
 {
 
 private:
-	int health;
-	std::string name;
+	int playerHealth;
+	std::string playerName;
 	std::string attackName;
 	int minAttack;
 	int maxAttack;
 
 public:
 	TeamMember();
+	TeamMember(std::string name, std::string attack, int min, int max, int health);
 	~TeamMember();
 
 	void TakeDamage(int damageTaken);
@@ -22,6 +23,14 @@ public:
 	std::string GetAttackName();
 	int GetMinAttack();
 	int GetMaxAttack();
+	int GetHealth();
+
+	void SetName(std::string name);
+	void SetAttackName(std::string attack);
+	void SetMinAttack(int min);
+	void SetMaxAttack(int max);
+	void SetHealth(int health);
+
 	bool IsMemberDead();
 };
 
