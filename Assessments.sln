@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tic Tac Toe Game", "Tic Tac
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Battle Arena Game", "Battle Arena Game\Battle Arena Game.vcxproj", "{6FE728EB-2734-47A4-8267-A5DF3E2DAA89}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NumberGuessingName", "NumberGuessingName\NumberGuessingName.vcxproj", "{4477C958-6EE5-4519-8543-078635E972F5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -31,6 +33,14 @@ Global
 		{6FE728EB-2734-47A4-8267-A5DF3E2DAA89}.Release|x64.Build.0 = Release|x64
 		{6FE728EB-2734-47A4-8267-A5DF3E2DAA89}.Release|x86.ActiveCfg = Release|Win32
 		{6FE728EB-2734-47A4-8267-A5DF3E2DAA89}.Release|x86.Build.0 = Release|Win32
+		{4477C958-6EE5-4519-8543-078635E972F5}.Debug|x64.ActiveCfg = Debug|x64
+		{4477C958-6EE5-4519-8543-078635E972F5}.Debug|x64.Build.0 = Debug|x64
+		{4477C958-6EE5-4519-8543-078635E972F5}.Debug|x86.ActiveCfg = Debug|Win32
+		{4477C958-6EE5-4519-8543-078635E972F5}.Debug|x86.Build.0 = Debug|Win32
+		{4477C958-6EE5-4519-8543-078635E972F5}.Release|x64.ActiveCfg = Release|x64
+		{4477C958-6EE5-4519-8543-078635E972F5}.Release|x64.Build.0 = Release|x64
+		{4477C958-6EE5-4519-8543-078635E972F5}.Release|x86.ActiveCfg = Release|Win32
+		{4477C958-6EE5-4519-8543-078635E972F5}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
