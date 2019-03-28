@@ -8,6 +8,7 @@ class TeamMember
 
 private:
 	int playerHealth;
+	int maxHealth;
 	std::string playerName;
 	std::string attackName;
 	int minAttack;
@@ -24,6 +25,7 @@ public:
 	int GetMinAttack();
 	int GetMaxAttack();
 	int GetHealth();
+	int GetMaxHealth();
 
 	void SetName(std::string name);
 	void SetAttackName(std::string attack);

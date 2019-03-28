@@ -19,7 +19,18 @@ void PlayGame();
 	bool playOn = true;
 	int errorCode = NOERROR;
 	while (playOn) {
+
 		system("cls");
+		std::cout << " ################################################################################# " << std::endl;
+		std::cout << "###                                                                             ###" << std::endl;
+		std::cout << "##     BBBB   AAA  TTTTT TTTTT L     EEEEE      AAA  RRRR  EEEEE N   N  AAA      ##" << std::endl;
+		std::cout << "##     B   B A   A   T     T   L     E         A   A R  RR E     NN  N A   A     ##" << std::endl;
+		std::cout << "##     BBBB  AAAAA   T     T   L     EEEEE     AAAAA RRRR  EEEEE N N N AAAAA     ##" << std::endl;
+		std::cout << "##     B   B A   A   T     T   L     E         A   A R  R  E     N  NN A   A     ##" << std::endl;
+		std::cout << "##     BBBB  A   A   T     T   LLLLL EEEEE     A   A R   R EEEEE N   N A   A     ##" << std::endl;
+		std::cout << "###                                                                             ###" << std::endl;
+		std::cout << " ################################################################################ " << std::endl;
+
 		int menuSelection = 0;
 		
 		switch(errorCode) {
@@ -68,35 +79,22 @@ void PlayGame();
 	 TeamMember teamOne[6];
 	 TeamMember teamTwo[6];
 
-	 teamOne[0].SetName("Iron Man");
-	 teamOne[0].SetAttackName("Blaster"); 
-	 teamOne[0].SetMaxAttack(10);
-	 teamOne[0].SetMaxAttack(50);
+	 teamOne[0] = TeamMember("Iron Man", "Blaster", 10, 50, 100);
+	 teamOne[1] = TeamMember("War Machine", "War", 10, 40, 100);
+	 teamOne[2] = TeamMember("Black Widow", "kick", 15, 35, 100);
+	 teamOne[3] = TeamMember("Black Panther", "Scratch", 25, 35, 100);
+	 teamOne[4] = TeamMember("The Vision", "Zap", 30, 60, 100);
+	 teamOne[5] = TeamMember("Spider-Man", "Web", 5, 25, 100);
 
-	 teamOne[1].SetName("War Machine");
-	 teamOne[1].SetAttackName("War");
-	 teamOne[1].SetMaxAttack(10);
-	 teamOne[1].SetMaxAttack(40);
 
-	 teamOne[2].SetName("Black Widow");
-	 teamOne[2].SetAttackName("kick");
-	 teamOne[2].SetMaxAttack(15);
-	 teamOne[2].SetMaxAttack(35);
+	 teamTwo[0] = TeamMember("Iron Man", "Blaster", 10, 50, 100);
+	 teamTwo[1] = TeamMember("War Machine", "War", 10, 40, 100);
+	 teamTwo[2] = TeamMember("Black Widow", "kick", 15, 35, 100);
+	 teamTwo[3] = TeamMember("Black Panther", "Scratch", 25, 35, 100);
+	 teamTwo[4] = TeamMember("The Vision", "Zap", 30, 60, 100);
+	 teamTwo[5] = TeamMember("Spider-Man", "Web", 5, 25, 100);
 
-	 teamOne[3].SetName("Black Panther");
-	 teamOne[3].SetAttackName("Scratch");
-	 teamOne[3].SetMaxAttack(25);
-	 teamOne[3].SetMaxAttack(35);
 
-	 teamOne[4].SetName("The Vision");
-	 teamOne[4].SetAttackName("Zap");
-	 teamOne[4].SetMaxAttack(30);
-	 teamOne[4].SetMaxAttack(60);
-
-	 teamOne[5].SetName("Spider-Man");
-	 teamOne[5].SetAttackName("Web");
-	 teamOne[5].SetMaxAttack(5);
-	 teamOne[5].SetMaxAttack(25);
 
 	 for (int i = 0; i < 6; i++)
 	 {

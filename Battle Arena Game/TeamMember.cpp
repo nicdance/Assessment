@@ -12,6 +12,7 @@ TeamMember::TeamMember(std::string name, std::string attack, int min, int max, i
 	minAttack = min;
 	maxAttack = max;
 	playerHealth = health;
+	maxHealth = health;
 }
 
 
@@ -41,6 +42,9 @@ int TeamMember::GetMaxAttack() {
 
 int TeamMember::GetHealth() {
 	return playerHealth;
+}
+int TeamMember::GetMaxHealth() {
+	return maxHealth;
 }
 
 void TeamMember::SetName(std::string name) {
