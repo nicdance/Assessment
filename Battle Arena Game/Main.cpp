@@ -5,7 +5,7 @@
 #include <iostream>
 //#include <random>
 //#include <time.h>
-#include <string>
+//#include <string>
 #include "TeamMember.h"
 
 const int NOERROR = 0;
@@ -98,7 +98,8 @@ void PlayGame();
 
 	 for (int i = 0; i < 6; i++)
 	 {
-		 std::cout << teamOne[i].GetName() << "/" << teamOne[i].GetAttackName() << "/" << teamOne[i].GetMaxAttack() << "/" << teamOne[i].GetMaxAttack() << std::endl;
+		 std::cout << teamOne[i].GetName() << "/" << teamOne[i].GetAttackName() << "/" << teamOne[i].GetMaxAttack() << "/" << 
+			 teamOne[i].GetMaxAttack() << "/" <<  teamOne[i].GetHealth() << "/" << teamOne[i].GetMaxHealth() << std::endl;
 	 }
 
 	 system("pause");

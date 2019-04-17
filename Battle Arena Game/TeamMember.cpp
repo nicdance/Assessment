@@ -1,18 +1,17 @@
 #include "TeamMember.h"
+
 #include <string>
 
 TeamMember::TeamMember()
 {
 }
 
-TeamMember::TeamMember(std::string name, std::string attack, int min, int max, int health)
+TeamMember::TeamMember(std::string name, std::string attack, int min, int max, int startHealth)
 {
 	playerName = name;
 	attackName = attack;
-	minAttack = min;
-	maxAttack = max;
-	playerHealth = health;
-	maxHealth = health;
+	damage = {min, max};
+	health = { startHealth,startHealth };
 }
 
 
@@ -21,7 +20,7 @@ TeamMember::~TeamMember()
 }
 
 void  TeamMember::TakeDamage(int damageTaken) {
-	playerHealth -= damageTaken;
+	health.currentHealth -= damageTaken;
 }
 
 std::string TeamMember::GetName() {
@@ -33,18 +32,18 @@ std::string TeamMember::GetAttackName() {
 }
 
 int TeamMember::GetMinAttack() {
-	return minAttack;
+	return damage.minDamage;
 }
 
 int TeamMember::GetMaxAttack() {
-	return maxAttack;
+	return damage.maxDamage;
 }
 
 int TeamMember::GetHealth() {
-	return playerHealth;
+	return health.currentHealth;
 }
 int TeamMember::GetMaxHealth() {
-	return maxHealth;
+	return health.maxHealth;
 }
 
 void TeamMember::SetName(std::string name) {
@@ -54,18 +53,18 @@ void TeamMember::SetAttackName(std::string attack) {
 	attackName = attack;
 }
 void TeamMember::SetMinAttack(int min) {
-	minAttack = min;
+	damage.minDamage = min;
 
 }
 void TeamMember::SetMaxAttack(int max) {
-	maxAttack = max;
+	damage.maxDamage = max;
 }
-void TeamMember::SetHealth(int health) {
-	playerHealth = health;
+void TeamMember::ResetHealth() {
+	health.currentHealth = health.maxHealth;
 }
 
 bool TeamMember::IsMemberDead() {
-	if (playerHealth<=0) {
+	if (health.currentHealth<=0) {
 		return true;
 	}
 	else {

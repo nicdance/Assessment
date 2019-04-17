@@ -146,7 +146,12 @@
     <ClCompile Include="TeamMember.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Damage.h" />
+    <ClInclude Include="Health.h" />
     <ClInclude Include="TeamMember.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Battle Arena Game.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

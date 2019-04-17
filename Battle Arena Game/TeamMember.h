@@ -2,17 +2,17 @@
 #define _TEAMMEMBER_H_
 
 #include <string>
+#include "Health.h"
+#include "Damage.h"
 
 class TeamMember
 {
 
 private:
-	int playerHealth;
-	int maxHealth;
 	std::string playerName;
 	std::string attackName;
-	int minAttack;
-	int maxAttack;
+	Damage damage;
+	Health health;
 
 public:
 	TeamMember();
@@ -31,7 +31,7 @@ public:
 	void SetAttackName(std::string attack);
 	void SetMinAttack(int min);
 	void SetMaxAttack(int max);
-	void SetHealth(int health);
+	void ResetHealth();
 
 	bool IsMemberDead();
 };
