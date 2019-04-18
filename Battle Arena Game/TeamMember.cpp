@@ -1,6 +1,7 @@
 #include "TeamMember.h"
 
 #include <string>
+#include <random>
 
 TeamMember::TeamMember()
 {
@@ -21,6 +22,14 @@ TeamMember::~TeamMember()
 
 void  TeamMember::TakeDamage(int damageTaken) {
 	health.currentHealth -= damageTaken;
+}
+
+int TeamMember::Attack(TeamMember* member) {
+	int dealtDamage = 0;
+
+	dealtDamage = rand() % damage.minDamage + damage.maxDamage;
+	member->TakeDamage(dealtDamage);
+	return dealtDamage;
 }
 
 std::string TeamMember::GetName() {
@@ -59,12 +68,18 @@ void TeamMember::SetMinAttack(int min) {
 void TeamMember::SetMaxAttack(int max) {
 	damage.maxDamage = max;
 }
+
+void TeamMember::SetHealth(int current) {
+	health.currentHealth = current;
+}
+
 void TeamMember::ResetHealth() {
 	health.currentHealth = health.maxHealth;
 }
 
 bool TeamMember::IsMemberDead() {
 	if (health.currentHealth<=0) {
+		health.currentHealth = 0;
 		return true;
 	}
 	else {

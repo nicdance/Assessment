@@ -20,6 +20,8 @@ public:
 	~TeamMember();
 
 	void TakeDamage(int damageTaken);
+	int Attack(TeamMember* member);
+
 	std::string GetName();
 	std::string GetAttackName();
 	int GetMinAttack();
@@ -31,6 +33,7 @@ public:
 	void SetAttackName(std::string attack);
 	void SetMinAttack(int min);
 	void SetMaxAttack(int max);
+	void SetHealth(int current);
 	void ResetHealth();
 
 	bool IsMemberDead();
