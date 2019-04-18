@@ -26,8 +26,8 @@ void  TeamMember::TakeDamage(int damageTaken) {
 
 int TeamMember::Attack(TeamMember* member) {
 	int dealtDamage = 0;
-
-	dealtDamage = rand() % damage.minDamage + damage.maxDamage;
+	int range = damage.maxDamage - damage.minDamage;
+	dealtDamage =damage.minDamage + int( range * rand()/ (RAND_MAX+1.0));
 	member->TakeDamage(dealtDamage);
 	return dealtDamage;
 }

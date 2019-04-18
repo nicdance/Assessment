@@ -3,9 +3,6 @@
 /   Assessment 2 - Battle Area Game
 */
 #include <iostream>
-//#include <random>
-//#include <time.h>
-//#include <string>
 #include "TeamMember.h"
 
 const int NOERROR = 0;
@@ -19,7 +16,9 @@ void Sort(TeamMember team[], int sizeOfTeam);
 void TeamsAttack(TeamMember attackingTeam[], TeamMember defendingTeam[]);
 bool TeamMemberAttack(TeamMember* member, TeamMember team[]);
 bool CheckTeamAlive(TeamMember team[], int sizeOfTeam);
+void PrintTeams(TeamMember team[]);
 void PrintTeams(TeamMember teamOne[], TeamMember teamTwo[]);
+void PrintMember(TeamMember* member);
 
 
  int main() {
@@ -97,44 +96,39 @@ void PrintTeams(TeamMember teamOne[], TeamMember teamTwo[]);
 	 teamTwo[1] = TeamMember("Hawkeye", "Pew Pew", 10, 40, 100);
 	 teamTwo[2] = TeamMember("Falcon", "Swoosh", 15, 35, 85);
 	 teamTwo[3] = TeamMember("Bucky Barns", "Bash", 25, 35, 90);
-	 teamTwo[4] = TeamMember("And-Man", "Giant Smash", 30, 60, 120);
+	 teamTwo[4] = TeamMember("Any-Man", "Giant Smash", 30, 60, 120);
 	 teamTwo[5] = TeamMember("Scarlet Witch", "Crack", 5, 25, 95);
 
-	 Sort(teamOne, 6);
-	 Sort(teamTwo, 6);
-
 	 bool keepPlaying = true;
-
+	 int round = 1;
 	 while (keepPlaying){
+		 std::cout << std::endl << std::endl << "** Beginning Round " << round << " **" << std::endl;
 
+		 // Called TeamsAttack the core function
 		 TeamsAttack(teamOne, teamTwo);
 
+		 // Sorts the 2 teams  highst to lowst
 		 Sort(teamOne, 6);
 		 Sort(teamTwo, 6);
 
-		 PrintTeams(teamOne, teamTwo);
+		 // Prints out the teams as a list
+		 //PrintTeams(teamOne);
+		// PrintTeams(teamTwo);
+		PrintTeams(teamOne, teamTwo);
 
+		 // Checks if either team is dead. If they are they set keepPLaying to false to exit game loop
 		 if (!CheckTeamAlive(teamOne, 6) || !CheckTeamAlive(teamTwo, 6)) {
 			 keepPlaying = false;
 		 }
 		 system("pause");
+		 round++;
 	 }
 
 	 std::cout << "Game Over" << std::endl;
 	 system("pause");
-	 //TeamMember* member = new TeamMember();
-		 // Create 2 arrays  of TeamMember clases
-
-		 // Member 1 of team 1 attacks random member of team 2
-		 // Member 1 of team 2 attacks random member of team 1
-		 // go thrugh all live team members 
-		 // if member dies display msg to console
-
-		 // Once end sort heros in decending health.
-
-		 // Repeat until all team members in one team are dead
  }
 
+ // Takes an array of TeamMembers and sorts them largest to smallest
  void Sort(TeamMember team[], int sizeOfTeam) {
 	 for (int i = 0; i < sizeOfTeam; i++)
 	 {
@@ -150,6 +144,7 @@ void PrintTeams(TeamMember teamOne[], TeamMember teamTwo[]);
  }
 
 
+ // Take a TeamMember array and checks if the team is alive.
  bool CheckTeamAlive(TeamMember team[], int sizeOfTeam) {
 	 bool alive = false;
 	 for (int i = 0; i < sizeOfTeam; i++)
@@ -161,18 +156,26 @@ void PrintTeams(TeamMember teamOne[], TeamMember teamTwo[]);
 	 return alive;
  }
 
+ // Takes in 2 TeamMember arrays and  has them attack each other
  void TeamsAttack(TeamMember teamOne[], TeamMember teamTwo[]) {
 	 for (int i = 0; i < TEAMSIZE; i++)
 	 {
-		 if (!TeamMemberAttack(&teamOne[i], teamTwo)) {
-			 i = TEAMSIZE;
+		 if (!teamOne[i].IsMemberDead()) {
+			 if (!TeamMemberAttack(&teamOne[i], teamTwo)) {
+				 i = TEAMSIZE;
+			 }
 		 }
-		 else if (!TeamMemberAttack(&teamTwo[i], teamOne)) {
-			 i = TEAMSIZE;
+		 if (!teamTwo[i].IsMemberDead()) {
+			 if (!TeamMemberAttack(&teamTwo[i], teamOne)) {
+				 i = TEAMSIZE;
+			 }
 		 }
 	 } // End For
  }
 
+ // Takes in a Single Team Member and the TeamMember array of the apposing team
+ // Finds a random living team member and attacks 
+ // Returns false if there are no living team members
  bool TeamMemberAttack(TeamMember* member, TeamMember team[]) {
 	 bool findMemberToAttack = true;
 	 while (findMemberToAttack) {
@@ -188,46 +191,65 @@ void PrintTeams(TeamMember teamOne[], TeamMember teamTwo[]);
 			 }
 		 }
 		 int attack = member->Attack(&team[memberToAttack]);
-		 std::cout << member->GetName() << " attacked " << team[memberToAttack].GetName() <<
-			 " with " << member->GetAttackName() << ". Hit for " << attack << std::endl;
+		 std::string result = member->GetName() + " attacked " + team[memberToAttack].GetName() +
+			 " with " + member->GetAttackName() + ".";
+		 int count = 53 - result.size();
+		 for (int i = 0; i < count; i++)
+		 {
+			 result = result + " ";
+		 }
+		 std::cout << result <<	 "Hit for " << attack << std::endl;
 		 if (team[memberToAttack].IsMemberDead()) {
 			 std::cout << team[memberToAttack].GetName() << " is KO" << std::endl;
 		 }
 	 } // End While
 	 return true;
  }
- void PrintTeams(TeamMember teamOne[], TeamMember teamTwo[]) {
+
+ // Prints out a Team list
+ void PrintTeams(TeamMember team[]) {
 	 std::cout << std::endl << "Team One" << std::endl;
 	 for (int i = 0; i < 6; i++)
 	 {
-		 if (teamOne[i].IsMemberDead()) {
-			 std::cout << teamOne[i].GetName() << " is KO" << std::endl;
+		 if (team[i].IsMemberDead()) {
+			 std::cout << team[i].GetName() << " is KO" << std::endl;
 		 }
 		 else {
-			 std::cout << teamOne[i].GetName() << " " << teamOne[i].GetHealth() << "/" << teamOne[i].GetMaxHealth() << std::endl;
-		 }
-	 }
-
-	 std::cout << std::endl << "Team Two" << std::endl;
-	 for (int i = 0; i < 6; i++)
-	 {
-
-		 if (teamTwo[i].IsMemberDead()) {
-			 std::cout << teamTwo[i].GetName() << " is KO" << std::endl;
-		 }
-		 else {
-			 std::cout << teamTwo[i].GetName() << " " << teamTwo[i].GetHealth() << "/" << teamTwo[i].GetMaxHealth() << std::endl;
+			 std::cout << team[i].GetName() << " " << team[i].GetHealth() << "/" << team[i].GetMaxHealth() << std::endl;
 		 }
 	 }
  }
- /*const int MAX = 10;
- std::default_random_engine dre(time(0));
- std::uniform_int_distribution<int> uid(0, MAX);
 
- uid(dre); // Generate random number
+ // Prints out a Team list
+ void PrintTeams(TeamMember teamOne[], TeamMember teamTwo[]) {
+	 std::cout << std::endl << "Team One                  Team Two" << std::endl;
+	 for (int i = 0; i < 6; i++)
+	 {
+		 PrintMember(&teamOne[i]);
+		 PrintMember(&teamTwo[i]);
+		 std::cout <<  std::endl;
+	 }
+ }
 
- // Second way
- srand(time(0));
- srand() % MAX;
-  std::cout << "This is a Test"<< std::endl;
- */
+ // Prints out a Team list
+ void PrintMember(TeamMember* member) {
+	 std::string  result = "";
+	if (member->IsMemberDead()) {
+		result = member->GetName() + " is KO";
+	}
+	else {
+		result = member->GetName();
+		int counter = 16 - result.size();
+		for (int  i = 0; i < counter; i++)
+		{
+			result = result + " ";
+		}
+		result = result +	+ " " + std::to_string(member->GetHealth()) + "/" + std::to_string(member->GetMaxHealth());
+	}
+	int counter = 26 - result.size();
+	for (int i = 0; i < counter; i++)
+	{
+		result = result + " ";
+	}
+	std::cout << result;
+ }
