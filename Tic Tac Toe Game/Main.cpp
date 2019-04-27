@@ -76,7 +76,7 @@ int main() {
 }
 
 
-// Executed when PLayer Opts to play a game
+// Executed when Player Opts to play a game
 void PlayGame() {
 
 	system("cls");

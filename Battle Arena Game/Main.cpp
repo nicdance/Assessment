@@ -11,31 +11,25 @@ const int INVALIDVALUE = 2;
 const int TEAMSIZE = 6;
 
 // Headers
+void PrintHeading();
 void PlayGame();
 void Sort(TeamMember team[], int sizeOfTeam);
 void TeamsAttack(TeamMember attackingTeam[], TeamMember defendingTeam[]);
 bool TeamMemberAttack(TeamMember* member, TeamMember team[]);
 bool CheckTeamAlive(TeamMember team[], int sizeOfTeam);
-void PrintTeams(TeamMember team[]);
 void PrintTeams(TeamMember teamOne[], TeamMember teamTwo[]);
 void PrintMember(TeamMember* member);
+int CheckWinningTeam(TeamMember teamOne[], TeamMember teamTwo[]);
 
 
  int main() {
-	bool playOn = true;
-	int errorCode = NOERROR;
+	bool playOn = true;			// Used to detemine if Game loop should continue
+	int errorCode = NOERROR;	// Checked to detemine error messages
+
 	while (playOn) {
 
 		system("cls");
-		std::cout << " ################################################################################# " << std::endl;
-		std::cout << "###                                                                             ###" << std::endl;
-		std::cout << "##     BBBB   AAA  TTTTT TTTTT L     EEEEE      AAA  RRRR  EEEEE N   N  AAA      ##" << std::endl;
-		std::cout << "##     B   B A   A   T     T   L     E         A   A R  RR E     NN  N A   A     ##" << std::endl;
-		std::cout << "##     BBBB  AAAAA   T     T   L     EEEEE     AAAAA RRRR  EEEEE N N N AAAAA     ##" << std::endl;
-		std::cout << "##     B   B A   A   T     T   L     E         A   A R  R  E     N  NN A   A     ##" << std::endl;
-		std::cout << "##     BBBB  A   A   T     T   LLLLL EEEEE     A   A R   R EEEEE N   N A   A     ##" << std::endl;
-		std::cout << "###                                                                             ###" << std::endl;
-		std::cout << " ################################################################################ " << std::endl;
+		PrintHeading();
 
 		int menuSelection = 0;
 		
@@ -50,7 +44,7 @@ void PrintMember(TeamMember* member);
 				break;
 		}
 
-		std::cout << "Menu" << std::endl;
+		std::cout << "<<< Menu >>>" << std::endl;
 		std::cout << "1. Start Game" << std::endl;
 		std::cout << "2. Quit Game" << std::endl;
 		std::cout << "-> ";
@@ -81,28 +75,31 @@ void PrintMember(TeamMember* member);
 	return 0;
 }
 
+ //  Sets up the teams and is the main game look and function
  void PlayGame() {
 	 TeamMember teamOne[6];
 	 TeamMember teamTwo[6];
 
-	 teamOne[0] = TeamMember("Iron Man", "Blaster", 10, 50, 100);
-	 teamOne[1] = TeamMember("War Machine", "War", 10, 40,120);
+	 teamOne[4] = TeamMember("The Vision", "Zap", 30, 50, 150);
+	 teamOne[1] = TeamMember("War Machine", "War", 25, 45, 120);
+	 teamOne[0] = TeamMember("Iron Man", "Blaster", 20, 40, 100);
 	 teamOne[2] = TeamMember("Black Widow", "kick", 15, 35, 90);
-	 teamOne[3] = TeamMember("Black Panther", "Scratch", 25, 35, 95);
-	 teamOne[4] = TeamMember("The Vision", "Zap", 30, 60, 150);
+	 teamOne[3] = TeamMember("Black Panther", "Scratch", 10, 30, 95);
 	 teamOne[5] = TeamMember("Spider-Man", "Web", 5, 25, 85);
 
-	 teamTwo[0] = TeamMember("Captain America", "Thump", 10, 50, 150);
-	 teamTwo[1] = TeamMember("Hawkeye", "Pew Pew", 10, 40, 100);
-	 teamTwo[2] = TeamMember("Falcon", "Swoosh", 15, 35, 85);
-	 teamTwo[3] = TeamMember("Bucky Barns", "Bash", 25, 35, 90);
-	 teamTwo[4] = TeamMember("Any-Man", "Giant Smash", 30, 60, 120);
-	 teamTwo[5] = TeamMember("Scarlet Witch", "Crack", 5, 25, 95);
+	 teamTwo[0] = TeamMember("Captain America", "Thump", 30, 50, 150);
+	 teamTwo[4] = TeamMember("Ant-Man", "Giant Smash", 25, 45, 120);
+	 teamTwo[1] = TeamMember("Hawkeye", "Pew Pew", 20, 40, 100);
+	 teamTwo[3] = TeamMember("Bucky Barns", "Bash", 15, 35, 90);
+	 teamTwo[5] = TeamMember("Scarlet Witch", "Crack", 10, 30, 95);
+	 teamTwo[2] = TeamMember("Falcon", "Swoosh", 5, 25, 85);
 
 	 bool keepPlaying = true;
 	 int round = 1;
 	 while (keepPlaying){
-		 std::cout << std::endl << std::endl << "** Beginning Round " << round << " **" << std::endl;
+		 system("cls");
+		 PrintHeading();
+		 std::cout << "<<< Beginning Round " << round << " >>>" << std::endl;
 
 		 // Called TeamsAttack the core function
 		 TeamsAttack(teamOne, teamTwo);
@@ -112,8 +109,6 @@ void PrintMember(TeamMember* member);
 		 Sort(teamTwo, 6);
 
 		 // Prints out the teams as a list
-		 //PrintTeams(teamOne);
-		// PrintTeams(teamTwo);
 		PrintTeams(teamOne, teamTwo);
 
 		 // Checks if either team is dead. If they are they set keepPLaying to false to exit game loop
@@ -124,10 +119,25 @@ void PrintMember(TeamMember* member);
 		 round++;
 	 }
 
-	 std::cout << "Game Over" << std::endl;
+	 system("cls");
+	 PrintHeading();
+	 std::cout << "*** Game Over ***" << std::endl;
+	 int winner = CheckWinningTeam(teamOne, teamTwo);
+	 std::cout << "The Winner is team " << winner << std::endl;
+	 PrintTeams(teamOne, teamTwo);
 	 system("pause");
  }
 
+ // Prints out the Battle Arena Heading
+ void PrintHeading() {
+	 std::cout << " #################################################################################" << std::endl;
+	 std::cout << "##     BBBB   AAA  TTTTT TTTTT L     EEEEE      AAA  RRRR  EEEEE N   N  AAA      ##" << std::endl;
+	 std::cout << "##     B   B A   A   T     T   L     E         A   A R  RR E     NN  N A   A     ##" << std::endl;
+	 std::cout << "##     BBBB  AAAAA   T     T   L     EEEEE     AAAAA RRRR  EEEEE N N N AAAAA     ##" << std::endl;
+	 std::cout << "##     B   B A   A   T     T   L     E         A   A R  R  E     N  NN A   A     ##" << std::endl;
+	 std::cout << "##     BBBB  A   A   T     T   LLLLL EEEEE     A   A R   R EEEEE N   N A   A     ##" << std::endl;
+	 std::cout << " #################################################################################" << std::endl << std::endl;
+ }
  // Takes an array of TeamMembers and sorts them largest to smallest
  void Sort(TeamMember team[], int sizeOfTeam) {
 	 for (int i = 0; i < sizeOfTeam; i++)
@@ -173,56 +183,46 @@ void PrintMember(TeamMember* member);
 	 } // End For
  }
 
+
+
  // Takes in a Single Team Member and the TeamMember array of the apposing team
  // Finds a random living team member and attacks 
  // Returns false if there are no living team members
  bool TeamMemberAttack(TeamMember* member, TeamMember team[]) {
 	 bool findMemberToAttack = true;
-	 while (findMemberToAttack) {
+	 if (!CheckTeamAlive(team, 6)) {
+		 return false;
+	 }
+	 
+	 int memberToAttack = 0;
+	  while (findMemberToAttack) {
+		 memberToAttack = rand() % (TEAMSIZE - 1);
+		 if (!team[memberToAttack].IsMemberDead()) {
+			 findMemberToAttack = false;
+		 }
+	 }
+	 
+	 int attack = member->Attack(&team[memberToAttack]);
+	 std::string result = member->GetName() + " attacks " + team[memberToAttack].GetName() +
+	 " with " + member->GetAttackName() + ".";
+	 
+	 int count = 53 - result.size();
+	 for (int i = 0; i < count; i++)
+	 {
+		 result = result + " ";
+	 }
+	 std::cout << result <<	 "Hit for " << attack << std::endl;
+	 if (team[memberToAttack].IsMemberDead()) {
+		std::cout << team[memberToAttack].GetName() << " is KO" << std::endl;
+	 }
 
-		 if (!CheckTeamAlive(team, 6)) {
-			 return false;
-		 }
-		 int memberToAttack = 0;
-		 while (findMemberToAttack) {
-			 memberToAttack = rand() % (TEAMSIZE - 1);
-			 if (!team[memberToAttack].IsMemberDead()) {
-				 findMemberToAttack = false;
-			 }
-		 }
-		 int attack = member->Attack(&team[memberToAttack]);
-		 std::string result = member->GetName() + " attacked " + team[memberToAttack].GetName() +
-			 " with " + member->GetAttackName() + ".";
-		 int count = 53 - result.size();
-		 for (int i = 0; i < count; i++)
-		 {
-			 result = result + " ";
-		 }
-		 std::cout << result <<	 "Hit for " << attack << std::endl;
-		 if (team[memberToAttack].IsMemberDead()) {
-			 std::cout << team[memberToAttack].GetName() << " is KO" << std::endl;
-		 }
-	 } // End While
 	 return true;
  }
 
- // Prints out a Team list
- void PrintTeams(TeamMember team[]) {
-	 std::cout << std::endl << "Team One" << std::endl;
-	 for (int i = 0; i < 6; i++)
-	 {
-		 if (team[i].IsMemberDead()) {
-			 std::cout << team[i].GetName() << " is KO" << std::endl;
-		 }
-		 else {
-			 std::cout << team[i].GetName() << " " << team[i].GetHealth() << "/" << team[i].GetMaxHealth() << std::endl;
-		 }
-	 }
- }
 
  // Prints out a Team list
  void PrintTeams(TeamMember teamOne[], TeamMember teamTwo[]) {
-	 std::cout << std::endl << "Team One                  Team Two" << std::endl;
+	 std::cout << std::endl << "<<Team One>>              <<Team Two>>" << std::endl;
 	 for (int i = 0; i < 6; i++)
 	 {
 		 PrintMember(&teamOne[i]);
@@ -231,7 +231,7 @@ void PrintMember(TeamMember* member);
 	 }
  }
 
- // Prints out a Team list
+ // Prints out a specific team member
  void PrintMember(TeamMember* member) {
 	 std::string  result = "";
 	if (member->IsMemberDead()) {
@@ -252,4 +252,22 @@ void PrintMember(TeamMember* member);
 		result = result + " ";
 	}
 	std::cout << result;
+ }
+
+ // Takes in 2 TeamMember arrays return the winning team number
+ int  CheckWinningTeam(TeamMember teamOne[], TeamMember teamTwo[]) {
+	 for (int i = 0; i < TEAMSIZE; i++)
+	 {
+		 if (!teamOne[i].IsMemberDead()) {
+			 return 1;
+		 }
+	 } // End For
+
+	 for (int i = 0; i < TEAMSIZE; i++)
+	 {
+		 if (!teamTwo[i].IsMemberDead()) {
+			 return 2;
+		 }
+	 } // End For
+	 return 0;
  }

@@ -9,6 +9,7 @@ const int NOERROR = 0;
 const int WRONGSELECTION = 1;
 const int INVALIDVALUE = 2;
 
+// Function Headers
 void PlayGame();
 void PrintHeading();
 void CheckError(int errorCode, int max);
@@ -19,6 +20,7 @@ int main() {
 	int menuSelection = 0;
 
 
+	// Game Menu Loop
 	while (playOn) {
 		system("cls");
 
@@ -57,7 +59,7 @@ int main() {
 	return 0;
 }
 
-
+// The core game mechanics.
 void PlayGame() {
 	system("cls");
 
@@ -72,6 +74,8 @@ void PlayGame() {
 	int currentGuess = MAXNUMBER/2;
 	int upper = MAXNUMBER + 1;
 	int lower = 1;
+
+	// Loops while still guessing number
 	while (checkNumber) {
 		CheckError(errorCode, 3);
 
@@ -118,6 +122,8 @@ void PlayGame() {
 	system("pause");
 }
 
+
+// Prints out the heading
 void PrintHeading() {
 	std::cout << " ############################################################################################" << std::endl;
 	std::cout << "###                                                                                         ###" << std::endl;
@@ -130,6 +136,7 @@ void PrintHeading() {
 	std::cout << " ############################################################################################" << std::endl;
 }
 
+// Displays error where appropriate
 void CheckError(int errorCode, int max) {
 	switch (errorCode) {
 	case WRONGSELECTION:
