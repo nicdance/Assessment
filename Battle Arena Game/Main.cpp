@@ -77,22 +77,23 @@ int CheckWinningTeam(TeamMember teamOne[], TeamMember teamTwo[]);
 
  //  Sets up the teams and is the main game look and function
  void PlayGame() {
-	 TeamMember teamOne[6];
-	 TeamMember teamTwo[6];
+	 // Dynamically allocates the memory.
+	 TeamMember* teamOne = new TeamMember[6];
+	 TeamMember* teamTwo = new TeamMember[6];
 
-	 teamOne[4] = TeamMember("The Vision", "Zap", 30, 50, 150);
+	 teamOne[0] = TeamMember("The Vision", "Zap", 30, 50, 150);
 	 teamOne[1] = TeamMember("War Machine", "War", 25, 45, 120);
-	 teamOne[0] = TeamMember("Iron Man", "Blaster", 20, 40, 100);
-	 teamOne[2] = TeamMember("Black Widow", "kick", 15, 35, 90);
-	 teamOne[3] = TeamMember("Black Panther", "Scratch", 10, 30, 95);
+	 teamOne[2] = TeamMember("Iron Man", "Blaster", 20, 40, 100);
+	 teamOne[3] = TeamMember("Black Widow", "kick", 15, 35, 90);
+	 teamOne[4] = TeamMember("Black Panther", "Scratch", 10, 30, 95);
 	 teamOne[5] = TeamMember("Spider-Man", "Web", 5, 25, 85);
 
 	 teamTwo[0] = TeamMember("Captain America", "Thump", 30, 50, 150);
-	 teamTwo[4] = TeamMember("Ant-Man", "Giant Smash", 25, 45, 120);
-	 teamTwo[1] = TeamMember("Hawkeye", "Pew Pew", 20, 40, 100);
+	 teamTwo[1] = TeamMember("Ant-Man", "Giant Smash", 25, 45, 120);
+	 teamTwo[2] = TeamMember("Hawkeye", "Pew Pew", 20, 40, 100);
 	 teamTwo[3] = TeamMember("Bucky Barns", "Bash", 15, 35, 90);
-	 teamTwo[5] = TeamMember("Scarlet Witch", "Crack", 10, 30, 95);
-	 teamTwo[2] = TeamMember("Falcon", "Swoosh", 5, 25, 85);
+	 teamTwo[4] = TeamMember("Scarlet Witch", "Crack", 10, 30, 95);
+	 teamTwo[5] = TeamMember("Falcon", "Swoosh", 5, 25, 85);
 
 	 bool keepPlaying = true;
 	 int round = 1;
@@ -126,6 +127,11 @@ int CheckWinningTeam(TeamMember teamOne[], TeamMember teamTwo[]);
 	 std::cout << "The Winner is team " << winner << std::endl;
 	 PrintTeams(teamOne, teamTwo);
 	 system("pause");
+
+
+	 // Deallocates the memory
+	 delete[] teamOne;
+	 delete[] teamTwo;
  }
 
  // Prints out the Battle Arena Heading
