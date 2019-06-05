@@ -78,8 +78,8 @@ int CheckWinningTeam(TeamMember teamOne[], TeamMember teamTwo[]);
  //  Sets up the teams and is the main game look and function
  void PlayGame() {
 	 // Dynamically allocates the memory.
-	 TeamMember* teamOne = new TeamMember[6];
-	 TeamMember* teamTwo = new TeamMember[6];
+	 TeamMember* teamOne = new TeamMember[TEAMSIZE];
+	 TeamMember* teamTwo = new TeamMember[TEAMSIZE];
 
 	 teamOne[0] = TeamMember("The Vision", "Zap", 30, 50, 150);
 	 teamOne[1] = TeamMember("War Machine", "War", 25, 45, 120);
@@ -132,6 +132,8 @@ int CheckWinningTeam(TeamMember teamOne[], TeamMember teamTwo[]);
 	 // Deallocates the memory
 	 delete[] teamOne;
 	 delete[] teamTwo;
+	 teamOne = nullptr;
+	 teamTwo = nullptr;
  }
 
  // Prints out the Battle Arena Heading
