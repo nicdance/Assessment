@@ -20,9 +20,9 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{330A22CD-BA0A-404A-836B-D1DF905F12C0}</ProjectGuid>
+    <ProjectGuid>{2A5D5576-93BA-43E7-95F3-81E5527436DB}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>BinaryFilesExercise</RootNamespace>
+    <RootNamespace>BinaryFiles</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -151,7 +151,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Main.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
