@@ -14,56 +14,92 @@ struct Book{
 
 };
 
+// Error Code Values
+const int NOERROR = 0;
+const int WRONGSELECTION = 1;
+const int INVALIDVALUE = 2;
+
 // All fucnctions
+void displayMainMenu();
 void printBook(Book book);
-int copyFromTextToBinary(std::string txtFile, std::string binaryFile);
+void addANewBook(std::string, Book library[], int maxLibraryRecords, int counter);
+int insertBookRecord(std::string fileName, Book library[], int positionToInsertAt);
+int copyAllBooksToBinary(std::string binaryFile, Book library[], int numberOfBooks);
+int copyFromTextToArray(std::string binaryFile, Book library[]);
 int loadDataFromBinary(std::string fileName, Book library[], int maxLibraryRecords);
 
 int main()
 {
+	bool keepGoing = true;		// Used to detemine if menu loop should continue
+	int errorCode = NOERROR;	// Checked to detemine error messages
 	int const maxLibraryRecords = 10;
 	Book library[maxLibraryRecords];
 	int counter = 0;
+
 	std::string fileName = "LibraryData.dat";
 	std::ifstream openFile(fileName, std::ios::binary);
 
 	if (openFile.is_open()) {
 		openFile.close();
-		std::cout << "In If" << std::endl;
 		counter = loadDataFromBinary(fileName, library, maxLibraryRecords);
 		if (counter == -1) {
 			return -1;
 		}
-
-		for (int i = 0; i < counter; i++)
-		{
-			printBook(library[i]);
-		}
-
-		std::string temp = "New Title";
-		strcpy_s(library[1].bookTitle, temp.c_str());
-		std::ofstream fout;
-
-		fout.open(fileName, std::ios::out | std::ios::binary || std::ios::app);
-		fout.seekp(sizeof(Book) * 1);
-		fout.write((char *)&library[1], sizeof(Book));
-		//fout.write((char *)&library[1].bookTitle, sizeof(library[1].bookTitle));
-
-		fout.close();
-
-
-		for (int i = 0; i < counter; i++)
-		{
-			printBook(library[i]);
-		}
-
 	} else {
 		openFile.close();
-		if (copyFromTextToBinary("inputFile.txt", fileName) == -1) {
+		counter = copyFromTextToArray("inputFile.txt", library);
+		if (counter == -1) {
 			return -1;
 		}
+		counter = copyAllBooksToBinary(fileName, library, counter);
 	}
 
+	while (keepGoing) {
+
+		int menuSelection = 0;
+
+		switch (errorCode) {
+		case WRONGSELECTION:
+			std::cout << "ERROR -> Please enter ender a number between 0-3." << std::endl;
+			break;
+		case INVALIDVALUE:
+			std::cout << "ERROR -> Please enter a numerical Value." << std::endl;
+			break;
+		default:
+			break;
+		}
+		displayMainMenu();
+		std::cin >> menuSelection;
+
+		if (std::cin.fail()) {
+			std::cin.clear();
+			std::cin.ignore(1);
+			errorCode = INVALIDVALUE;
+		}
+		else {
+			switch (menuSelection) {				
+			case 1:
+				//std::cout << std::endl << "1. Add a new book" << std::endl;
+				addANewBook(fileName, library, maxLibraryRecords,counter);
+				break;
+			case 2:
+				std::cout << std::endl << "2. Display books" << std::endl;
+				break;
+			case 3:
+				std::cout << std::endl << "3. Update book details" << std::endl;
+
+				break;
+			case 0:
+				keepGoing = false;
+				std::cout << "Enjoy Your books. Good Bye" << std::endl;
+				break;
+			default:
+				errorCode = WRONGSELECTION;
+				break;
+			}
+		}
+	}
+	
 	system("pause");
 
 	return 0;
@@ -74,6 +110,39 @@ void printBook(Book book) {
 		<< book.dueDate << std::endl << book.borrowerName << std::endl;
 }
 
+void displayMainMenu() {
+	std::cout << "###################################" << std::endl;
+	std::cout << "#####                      ########" << std::endl;
+	std::cout << "##### Binary File Exercise ########" << std::endl;
+	std::cout << "#####                      ########" << std::endl;
+	std::cout << "###################################" << std::endl;
+	std::cout << "1. Add a new book" << std::endl;
+	std::cout << "2. Display books" << std::endl;
+	std::cout << "3. Update book details" << std::endl;
+	std::cout << "0. Exit" << std::endl;
+	std::cout << "Enter a number between 0-3: ";
+}
+
+
+void addANewBook(std::string, Book library[], int maxLibraryRecords, int counter) {
+
+}
+
+/*
+*	This function overrides a given book entry in the binary file
+*/
+int insertBookRecord(std::string fileName, Book library[], int positionToInsertAt) {
+	std::ofstream fout;
+
+	fout.open(fileName, std::ios::out | std::ios::binary || std::ios::app);
+	fout.seekp(sizeof(Book) * positionToInsertAt);
+	fout.write((char *)&library[positionToInsertAt], sizeof(Book));
+	
+	fout.close();
+	return 0;
+}
+
+// This function to used to Load each entry in the binary file into an array
 int loadDataFromBinary(std::string fileName, Book library[], int maxLibraryRecords) {
 	int counter = 0;
 	std::fstream fileInput(fileName, std::ios::in | std::ios::binary);
@@ -81,12 +150,11 @@ int loadDataFromBinary(std::string fileName, Book library[], int maxLibraryRecor
 		std::cout << "Error opening " << fileName << std::endl;
 		return -1;
 	}
+
+	// The next 3 changes the seek point to determine the size of the file and then resets it so that we are looking at te begining of the file again
 	fileInput.seekg(0, std::ios::end);
 	long size = fileInput.tellg();
 	fileInput.seekg(0, std::ios::beg);
-	std::cout << "side of file is: " << size << std::endl;
-	std::cout << "side of book is: " << sizeof(Book) << std::endl;
-	std::cout << "nmumber of books is: " << (size / sizeof(Book)) << std::endl;
 
 	for (int i = 0; i < (size / sizeof(Book)); i++)
 	{
@@ -97,18 +165,37 @@ int loadDataFromBinary(std::string fileName, Book library[], int maxLibraryRecor
 }
 
 /*
-*	copyFromTextToBinary steps through the inputFile and adds each book reecord
-*	and saves it to the library binary data file.
+*	copyAllBooksToBinary steps through the array and adds each book reecord
+*	to the Library dat file.
 */
-int copyFromTextToBinary(std::string txtFile, std::string binaryFile) {
+int copyAllBooksToBinary(std::string binaryFile, Book library[], int numberOfBooks) {
 	std::ofstream fout;
-	fout.open(binaryFile, std::ios::out | std::ios::binary);
+	fout.open(binaryFile, std::ios::out | std::ios::binary | std::ios::app);
+	int counter = 0;
+
+	
+	for(int i = 0; i< numberOfBooks; i++)
+	{
+		fout.seekp(sizeof(Book) * i);
+		fout.write((char *)&library[i], sizeof(Book));
+	}
+
+	fout.close();
+
+	return counter;
+}
+
+/*
+*	copyFromTextToBinary steps through the inputFile and adds each book reecord
+*	to the Library Array.
+*/
+int copyFromTextToArray(std::string txtFile, Book library[]) {
 	std::fstream file(txtFile);
 	if (!file.good() || !file.is_open()) {
 		std::cout << "Error opening inputfile.txt" << std::endl;
 		return -1;
 	}
-
+	int count = 0;
 	while (!file.eof()) {
 		std::string number, title, author, status, dueDate, borrowerName;
 
@@ -130,14 +217,14 @@ int copyFromTextToBinary(std::string txtFile, std::string binaryFile) {
 		strcpy_s(book.dueDate, dueDate.c_str());
 		strcpy_s(book.borrowerName, borrowerName.c_str());
 
+		library[count] = book;
 		std::cout << "Book added to system" << std::endl << "Details of Book Added" << std::endl;
-		printBook(book);
-		fout.write((char *)&book, sizeof(Book));
+		printBook(library[count]);
+		count++;
 	}
 
 	file.close();
-	fout.close();
-	return 0;
+	return count;
 }
 
 
@@ -145,4 +232,24 @@ int copyFromTextToBinary(std::string txtFile, std::string binaryFile) {
 /*while (!fileInput.eof()) {
 
 	fileInput.write((char *)book, sizeof(Book));
-}*/
+}
+
+
+	fileInput.seekg(0, std::ios::end);
+	long size = fileInput.tellg();
+	fileInput.seekg(0, std::ios::beg);
+
+
+		std::string temp = "BOOOOOOOOOOOOKIE";
+	strcpy_s(library[1].bookTitle, temp.c_str());
+
+
+	insertBookRecord(fileName, library, 1);
+
+
+	for (int i = 0; i < counter; i++)
+	{
+		printBook(library[i]);
+	}
+
+*/
