@@ -20,11 +20,15 @@ const int WRONGSELECTION = 1;
 const int INVALIDVALUE = 2;
 
 // All fucnctions
+int getMenuSelection(int max);
+void displayListFields();
 void displayMainMenu();
+void displayListOfBooks(Book library[], int counter);
 void printBook(Book book);
 void flushInput();
 void addANewBook(std::string fileName, Book library[], int maxLibraryRecords, int counter);
 int addBookToEOF(std::string fileName, Book library[], int counter);
+void updateRecordField(Book library[], int bookToUpdate, int fieldToUpdate);
 int insertBookRecord(std::string fileName, Book library[], int positionToInsertAt);
 int copyAllBooksToBinary(std::string binaryFile, Book library[], int numberOfBooks);
 int copyFromTextToArray(std::string binaryFile, Book library[]);
@@ -58,51 +62,47 @@ int main()
 
 	while (keepGoing) {
 
+		displayMainMenu();
 		int menuSelection = 0;
+		menuSelection = getMenuSelection(3);
 
-		switch (errorCode) {
-		case WRONGSELECTION:
-			std::cout << "ERROR -> Please enter ender a number between 0-3." << std::endl;
+		int bookToUpdate = 0;
+		int fieldToUpdate = 0;
+		
+		switch (menuSelection) {				
+		case 1:
+			std::cout << "counter: "  << counter<<std::endl;
+			addANewBook(fileName, library, maxLibraryRecords,counter);
+			counter++;
+			system("pause");
 			break;
-		case INVALIDVALUE:
-			std::cout << "ERROR -> Please enter a numerical Value." << std::endl;
+		case 2:
+			std::cout << std::endl << "##### Display Book Details ########" << std::endl;
+			displayListOfBooks(library, counter);
+			menuSelection = getMenuSelection(counter);
+			printBook(library[menuSelection - 1]);
+			system("pause");
+			break;
+		case 3:
+			std::cout << std::endl << "##### Update Book Details ########" << std::endl;
+			displayListOfBooks(library, counter);
+			bookToUpdate = getMenuSelection(counter);
+			displayListFields();
+			fieldToUpdate = getMenuSelection(4);
+			updateRecordField(library, bookToUpdate, fieldToUpdate);
+			std::cout << "bookToUpdate: " << bookToUpdate << std::endl;
+			insertBookRecord(fileName, library, bookToUpdate);
+			system("pause");
+			break;
+		case 0:
+			keepGoing = false;
+			std::cout << "Enjoy Your books. Good Bye" << std::endl;
 			break;
 		default:
+			errorCode = WRONGSELECTION;
 			break;
 		}
-		displayMainMenu();
-		std::cin >> menuSelection;
-
-		if (std::cin.fail()) {
-			std::cin.clear();
-			std::cin.ignore(1);
-			errorCode = INVALIDVALUE;
-		}
-		else {
-			switch (menuSelection) {				
-			case 1:
-				std::cout << "counter: "  << counter<<std::endl;
-				//std::cout << std::endl << "1. Add a new book" << std::endl;
-				addANewBook(fileName, library, maxLibraryRecords,counter);
-				counter++;
-				break;
-			case 2:
-				std::cout << std::endl << "2. Display books" << std::endl;
-
-				break;
-			case 3:
-				std::cout << std::endl << "3. Update book details" << std::endl;
-
-				break;
-			case 0:
-				keepGoing = false;
-				std::cout << "Enjoy Your books. Good Bye" << std::endl;
-				break;
-			default:
-				errorCode = WRONGSELECTION;
-				break;
-			}
-		}
+		//}
 	}
 	
 	system("pause");
@@ -110,12 +110,63 @@ int main()
 	return 0;
 }
 
+/*
+*	Displays the details of a specific book. Will only show borrowers details if satus is 2	
+*/
 void printBook(Book book) {
-	std::cout << book.callNumber << std::endl << book.bookTitle << std::endl << book.authorName << std::endl << book.status << std::endl
-		<< book.dueDate << std::endl << book.borrowerName << std::endl;
+	std::cout << std::endl << "Call Number: " << book.callNumber << std::endl << "Book Title: " << book.bookTitle << std::endl
+		<< "Author Name: " << book.authorName << std::endl << "Status:" << book.status << std::endl;
+		if(strcmp(book.status, "2") == 0){
+			std::cout << "Due Date: " << book.dueDate << std::endl << "Borrower Name: " << book.borrowerName << std::endl;
+		}		
+		std::cout<< std::endl;
 }
 
+
+/*
+*	Based on the max number of options. this function retreives a valid menu selection from 0 to the max number
+*/
+int getMenuSelection(int max) {
+	bool keepGoing = true;
+	int errorCode = 0;
+	while (keepGoing) {
+
+		int menuSelection = 0;
+
+		switch (errorCode) {
+		case WRONGSELECTION:
+			std::cout << "ERROR -> Please enter ender a number between 0-" << max <<"." << std::endl;
+			std::cout << "Enter a number between 0-" << max << ": ";
+			break;
+		case INVALIDVALUE:
+			std::cout << "ERROR -> Please enter a numerical Value." << std::endl;
+			std::cout << "Enter a number between 0-" << max << ": ";
+			break;
+		default:
+			break;
+		}
+		std::cin >> menuSelection;
+
+		if (std::cin.fail()) {
+			std::cin.clear();
+			std::cin.ignore(1);
+			errorCode = INVALIDVALUE;
+		}
+		else if(menuSelection<0 || menuSelection>max){
+			errorCode = WRONGSELECTION;
+		}
+		else {
+			return menuSelection;
+		}
+	}
+	return 0;
+}
+
+/*
+*	Displays the Main Menu
+*/
 void displayMainMenu() {
+	system("cls");
 	std::cout << "###################################" << std::endl;
 	std::cout << "#####                      ########" << std::endl;
 	std::cout << "##### Binary File Exercise ########" << std::endl;
@@ -128,37 +179,71 @@ void displayMainMenu() {
 	std::cout << "Enter a number between 0-3: ";
 }
 
+
+/*
+*	Displays a numbered list of fields to update.
+*/
+void displayListFields() {
+	std::cout << "##### Select Field To Update ########" << std::endl;
+	std::cout << "1. Call Number" << std::endl;
+	std::cout << "2. Title" << std::endl;
+	std::cout << "3. Author" << std::endl;
+	std::cout << "4. Status" << std::endl;
+	std::cout << "0. Exit" << std::endl << std::endl;
+	std::cout << "Enter a number between 0-4: ";
+}
+
+/*
+*	Displays a numbered list of book titles.
+*/
+void displayListOfBooks(Book library[], int counter) {
+	for (int i = 0; i < counter; i++)
+	{
+		std::cout<< (i+1) << ". " << library[i].bookTitle << std::endl;
+	}
+	std::cout << "0. Back" << std::endl << std::endl;
+	std::cout << "Enter a number between 0-" << counter << ": ";
+}
+
+/*
+*	Flushes the inpout stream cin  so that getline will work correctly.
+*/
 void flushInput() {
 	std::cin.clear();
 	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 }
 
+/*
+*	Prompts the user for details of the new book to add to the system
+*/
 void addANewBook(std::string fileName, Book library[], int maxLibraryRecords, int counter) {
-	std::string callNumber, title, author;
+	std::string callNumber, title, author, status;
+	status = "1";
 	Book book;
+
+	flushInput();
 	std::cout << "Please enter the book Details" << std::endl;
 	std::cout << "Call Number : ";
-	flushInput();
 	getline(std::cin, callNumber);
 	std::cout << "Title : ";
-	//flushInput();
 	getline(std::cin, title);
 	std::cout << "Author : ";
-	//flushInput();
 	getline(std::cin, author);
 
 	strcpy_s(book.callNumber, callNumber.c_str());
 	strcpy_s(book.bookTitle, title.c_str());
 	strcpy_s(book.authorName, author.c_str());
+	strcpy_s(book.status, status.c_str());
 
 	library[counter] = book;
 
-	insertBookRecord(fileName, library, counter);
+	addBookToEOF(fileName, library, counter);
 }
 
 
 /*
-*	This function overrides a given book entry in the binary file
+*	This function appends a new entry to an exisiting binary file
+*/
 int addBookToEOF(std::string fileName, Book library[], int counter) {
 	std::ofstream fout;
 
@@ -169,7 +254,6 @@ int addBookToEOF(std::string fileName, Book library[], int counter) {
 	fout.close();
 	return 0;
 }
-*/
 
 /*
 *	This function overrides a given book entry in the binary file
@@ -178,11 +262,54 @@ int insertBookRecord(std::string fileName, Book library[], int positionToInsertA
 	std::ofstream fout;
 
 	fout.open(fileName, std::ios::out | std::ios::binary || std::ios::app);
-	fout.seekp(sizeof(Book) * positionToInsertAt);
-	fout.write((char *)&library[positionToInsertAt], sizeof(Book));
+	fout.seekp(sizeof(Book) * (positionToInsertAt-1));
+	fout.write((char *)&library[positionToInsertAt-1], sizeof(Book));
 	
 	fout.close();
 	return 0;
+}
+
+/*
+*	This function retreives requests input from the user for the field they have opted to update.
+*	This value is stored in the array
+*/
+void updateRecordField(Book library[], int bookToUpdate, int fieldToUpdate) {
+	std::string callNumber, title, author, status, dueDate, borrowerName;
+	flushInput();
+	switch (fieldToUpdate)
+	{
+		case 1:
+			std::cout << "Please enter Call Number: ";
+			getline(std::cin, callNumber);
+			strcpy_s(library[bookToUpdate-1].callNumber, callNumber.c_str());
+			break;
+		case 2:
+			std::cout << "Please enter Title: ";
+			getline(std::cin, title);
+			strcpy_s(library[bookToUpdate - 1].bookTitle, title.c_str());
+			break;
+		case 3:
+			std::cout << "Please enter Author Name: ";
+			getline(std::cin, author);
+			strcpy_s(library[bookToUpdate - 1].authorName, author.c_str());
+			break;
+		case 4:
+			std::cout << "Please enter Status: ";
+			std::cin >> status;
+			strcpy_s(library[bookToUpdate - 1].status, status.c_str());
+			if (strcmp(library[bookToUpdate - 1].status, "2") == 0) {
+				flushInput();
+				std::cout << "Please enter dueDate: ";
+				getline(std::cin, dueDate);
+				strcpy_s(library[bookToUpdate - 1].dueDate, dueDate.c_str());
+				std::cout << "Please enter Borrower Name: ";
+				getline(std::cin, borrowerName);
+				strcpy_s(library[bookToUpdate - 1].borrowerName, borrowerName.c_str());
+			}
+			break;
+		default:
+			break;
+	}
 }
 
 // This function to used to Load each entry in the binary file into an array
@@ -194,7 +321,8 @@ int loadDataFromBinary(std::string fileName, Book library[], int maxLibraryRecor
 		return -1;
 	}
 
-	// The next 3 changes the seek point to determine the size of the file and then resets it so that we are looking at te begining of the file again
+	// The next 3 changes the seek point to determine the size of the file and then resets it 
+	// so that we are looking at te begining of the file again
 	fileInput.seekg(0, std::ios::end);
 	long size = fileInput.tellg();
 	fileInput.seekg(0, std::ios::beg);
@@ -239,7 +367,7 @@ int copyAllBooksToBinary(std::string binaryFile, Book library[], int numberOfBoo
 int copyFromTextToArray(std::string txtFile, Book library[]) {
 	std::fstream file(txtFile);
 	if (!file.good() || !file.is_open()) {
-		std::cout << "Error opening inputfile.txt" << std::endl;
+		std::cout << "Unable to load inputfile.txt" << std::endl;
 		return -1;
 	}
 	int count = 0;
@@ -266,37 +394,9 @@ int copyFromTextToArray(std::string txtFile, Book library[]) {
 
 		library[count] = book;
 		std::cout << "Book added to system" << std::endl << "Details of Book Added" << std::endl;
-		printBook(library[count]);
 		count++;
 	}
 
 	file.close();
 	return count;
 }
-
-
-
-/*while (!fileInput.eof()) {
-
-	fileInput.write((char *)book, sizeof(Book));
-}
-
-
-	fileInput.seekg(0, std::ios::end);
-	long size = fileInput.tellg();
-	fileInput.seekg(0, std::ios::beg);
-
-
-		std::string temp = "BOOOOOOOOOOOOKIE";
-	strcpy_s(library[1].bookTitle, temp.c_str());
-
-
-	insertBookRecord(fileName, library, 1);
-
-
-	for (int i = 0; i < counter; i++)
-	{
-		printBook(library[i]);
-	}
-
-*/
