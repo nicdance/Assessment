@@ -5,11 +5,11 @@
 #include <string>
 
 struct Book{
-	char callNumber[11]="";
+	char callNumber[25]="";
 	char bookTitle[100]="";
 	char authorName[100]="";
 	char status[4]="";
-	char dueDate[12]="";
+	char dueDate[20]="";
 	char borrowerName[100]="";
 
 };
@@ -22,7 +22,9 @@ const int INVALIDVALUE = 2;
 // All fucnctions
 void displayMainMenu();
 void printBook(Book book);
-void addANewBook(std::string, Book library[], int maxLibraryRecords, int counter);
+void flushInput();
+void addANewBook(std::string fileName, Book library[], int maxLibraryRecords, int counter);
+int addBookToEOF(std::string fileName, Book library[], int counter);
 int insertBookRecord(std::string fileName, Book library[], int positionToInsertAt);
 int copyAllBooksToBinary(std::string binaryFile, Book library[], int numberOfBooks);
 int copyFromTextToArray(std::string binaryFile, Book library[]);
@@ -51,7 +53,7 @@ int main()
 		if (counter == -1) {
 			return -1;
 		}
-		counter = copyAllBooksToBinary(fileName, library, counter);
+		copyAllBooksToBinary(fileName, library, counter);
 	}
 
 	while (keepGoing) {
@@ -79,11 +81,14 @@ int main()
 		else {
 			switch (menuSelection) {				
 			case 1:
+				std::cout << "counter: "  << counter<<std::endl;
 				//std::cout << std::endl << "1. Add a new book" << std::endl;
 				addANewBook(fileName, library, maxLibraryRecords,counter);
+				counter++;
 				break;
 			case 2:
 				std::cout << std::endl << "2. Display books" << std::endl;
+
 				break;
 			case 3:
 				std::cout << std::endl << "3. Update book details" << std::endl;
@@ -119,14 +124,52 @@ void displayMainMenu() {
 	std::cout << "1. Add a new book" << std::endl;
 	std::cout << "2. Display books" << std::endl;
 	std::cout << "3. Update book details" << std::endl;
-	std::cout << "0. Exit" << std::endl;
+	std::cout << "0. Exit" << std::endl << std::endl;
 	std::cout << "Enter a number between 0-3: ";
 }
 
-
-void addANewBook(std::string, Book library[], int maxLibraryRecords, int counter) {
-
+void flushInput() {
+	std::cin.clear();
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 }
+
+void addANewBook(std::string fileName, Book library[], int maxLibraryRecords, int counter) {
+	std::string callNumber, title, author;
+	Book book;
+	std::cout << "Please enter the book Details" << std::endl;
+	std::cout << "Call Number : ";
+	flushInput();
+	getline(std::cin, callNumber);
+	std::cout << "Title : ";
+	//flushInput();
+	getline(std::cin, title);
+	std::cout << "Author : ";
+	//flushInput();
+	getline(std::cin, author);
+
+	strcpy_s(book.callNumber, callNumber.c_str());
+	strcpy_s(book.bookTitle, title.c_str());
+	strcpy_s(book.authorName, author.c_str());
+
+	library[counter] = book;
+
+	insertBookRecord(fileName, library, counter);
+}
+
+
+/*
+*	This function overrides a given book entry in the binary file
+int addBookToEOF(std::string fileName, Book library[], int counter) {
+	std::ofstream fout;
+
+	fout.open(fileName, std::ios::out | std::ios::binary || std::ios::app);
+	fout.seekp(sizeof(Book) * counter);
+	fout.write((char *)&library[counter], sizeof(Book));
+
+	fout.close();
+	return 0;
+}
+*/
 
 /*
 *	This function overrides a given book entry in the binary file
@@ -160,6 +203,10 @@ int loadDataFromBinary(std::string fileName, Book library[], int maxLibraryRecor
 	{
 		fileInput.read((char *)&library[i], sizeof(Book));
 		counter++;
+	}
+	for (int i = 0; i < counter; i++)
+	{
+		printBook(library[i]);
 	}
 	return counter;
 }
