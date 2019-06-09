@@ -1,9 +1,16 @@
+/*
+/	@Author Nicole Dance
+/   Assessment Binary File Exercise
+*/
 
 #include "pch.h"
 #include <iostream>
 #include <fstream>
 #include <string>
 
+/*
+*	Book struct used to store book data.
+*/
 struct Book{
 	char callNumber[25]="";
 	char bookTitle[100]="";
@@ -11,7 +18,6 @@ struct Book{
 	char status[4]="";
 	char dueDate[20]="";
 	char borrowerName[100]="";
-
 };
 
 // Error Code Values
@@ -19,7 +25,7 @@ const int NOERROR = 0;
 const int WRONGSELECTION = 1;
 const int INVALIDVALUE = 2;
 
-// All fucnctions
+// All functions
 int getMenuSelection(int max);
 void displayListFields();
 void displayMainMenu();
@@ -70,25 +76,34 @@ int main()
 		int fieldToUpdate = 0;
 		
 		switch (menuSelection) {				
-		case 1:
+		case 1:		// Menu option to add a new book
 			std::cout << "counter: "  << counter<<std::endl;
 			addANewBook(fileName, library, maxLibraryRecords,counter);
 			counter++;
 			system("pause");
 			break;
-		case 2:
+		case 2:		// Menu option to display details of a book
 			std::cout << std::endl << "##### Display Book Details ########" << std::endl;
 			displayListOfBooks(library, counter);
 			menuSelection = getMenuSelection(counter);
+			if (menuSelection ==0) {
+				break;
+			}
 			printBook(library[menuSelection - 1]);
 			system("pause");
 			break;
-		case 3:
+		case 3:		// Menu option to update a spedific field on a chosen book
 			std::cout << std::endl << "##### Update Book Details ########" << std::endl;
 			displayListOfBooks(library, counter);
 			bookToUpdate = getMenuSelection(counter);
+			if (bookToUpdate == 0) {
+				break;
+			}
 			displayListFields();
 			fieldToUpdate = getMenuSelection(4);
+			if (fieldToUpdate == 0) {
+				break;
+			}
 			updateRecordField(library, bookToUpdate, fieldToUpdate);
 			std::cout << "bookToUpdate: " << bookToUpdate << std::endl;
 			insertBookRecord(fileName, library, bookToUpdate);
@@ -99,14 +114,10 @@ int main()
 			std::cout << "Enjoy Your books. Good Bye" << std::endl;
 			break;
 		default:
-			errorCode = WRONGSELECTION;
 			break;
 		}
-		//}
-	}
-	
+	}	
 	system("pause");
-
 	return 0;
 }
 
@@ -119,6 +130,9 @@ void printBook(Book book) {
 		if(strcmp(book.status, "2") == 0){
 			std::cout << "Due Date: " << book.dueDate << std::endl << "Borrower Name: " << book.borrowerName << std::endl;
 		}		
+		else if (strcmp(book.status, "3") == 0) {
+			std::cout << "This Book is Lost :( " << std::endl;
+		}
 		std::cout<< std::endl;
 }
 
@@ -252,6 +266,7 @@ int addBookToEOF(std::string fileName, Book library[], int counter) {
 	fout.write((char *)&library[counter], sizeof(Book));
 
 	fout.close();
+	std::cout << "Book Record Has been saved to Binary File. " << std::endl;
 	return 0;
 }
 
@@ -266,6 +281,8 @@ int insertBookRecord(std::string fileName, Book library[], int positionToInsertA
 	fout.write((char *)&library[positionToInsertAt-1], sizeof(Book));
 	
 	fout.close();
+
+	std::cout << "Book Record Has been saved to Binary File. " << std::endl;
 	return 0;
 }
 
@@ -275,6 +292,7 @@ int insertBookRecord(std::string fileName, Book library[], int positionToInsertA
 */
 void updateRecordField(Book library[], int bookToUpdate, int fieldToUpdate) {
 	std::string callNumber, title, author, status, dueDate, borrowerName;
+	int option = 0;
 	flushInput();
 	switch (fieldToUpdate)
 	{
@@ -295,7 +313,8 @@ void updateRecordField(Book library[], int bookToUpdate, int fieldToUpdate) {
 			break;
 		case 4:
 			std::cout << "Please enter Status: ";
-			std::cin >> status;
+			option = getMenuSelection(3);
+			status = std::to_string(option);
 			strcpy_s(library[bookToUpdate - 1].status, status.c_str());
 			if (strcmp(library[bookToUpdate - 1].status, "2") == 0) {
 				flushInput();
